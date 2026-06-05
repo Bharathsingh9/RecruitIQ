@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>RecruitQ  AI</h1>
+  <h1>RecruitIQ  AI</h1>
   <p><b>Enterprise Resume Screening & AI Interview Copilot</b></p>
 
   <p>
