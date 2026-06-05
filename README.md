@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🚀 HireGen AI</h1>
+  <h1>RecruitQ  AI</h1>
   <p><b>Enterprise Resume Screening & AI Interview Copilot</b></p>
 
   <p>
@@ -13,7 +13,7 @@
 ---
 
 ## 📖 Overview
-**HireGen AI** is an advanced, AI-powered Applicant Tracking System (ATS) and interview assistant designed for modern recruiting teams. It leverages Generative AI (Gen AI), Large Language Models (LLMs), Machine Learning (Random Forest), and Retrieval-Augmented Generation (RAG) to automate resume screening, rank candidates objectively, and assist recruiters during live interviews.
+**RecruitIQ** is an advanced, AI-powered Applicant Tracking System (ATS) and interview assistant designed for modern recruiting teams. It leverages Generative AI (Gen AI), Large Language Models (LLMs), Machine Learning (Random Forest), and Retrieval-Augmented Generation (RAG) to automate resume screening, rank candidates objectively, and assist recruiters during live interviews.
 
 ## ✨ Core Features
 
