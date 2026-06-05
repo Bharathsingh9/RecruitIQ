@@ -4,8 +4,8 @@
 
   <p>
     <img src="https://img.shields.io/badge/Python-3.10+-blue.svg" alt="Python Version" />
-    <img src="https://img.shields.io/badge/Streamlit-Framework-FF4B4B.svg" alt="Streamlit" />
-    <img src="https://img.shields.io/badge/LLM-Groq%20%7C%20Llama%203-orange.svg" alt="Groq" />
+    <img src="https://img.shields.io/badge/React-19-61DAFB.svg" alt="React" />
+    <img src="https://img.shields.io/badge/Gen_AI-LLMs_&_RAG-orange.svg" alt="Gen AI & RAG" />
     <img src="https://img.shields.io/badge/Machine%20Learning-Scikit--Learn-yellow.svg" alt="Scikit-Learn" />
   </p>
 </div>
@@ -13,7 +13,7 @@
 ---
 
 ## 📖 Overview
-**HireGen AI** is an advanced, AI-powered Applicant Tracking System (ATS) and interview assistant designed for modern recruiting teams. It leverages Large Language Models (via Groq), Machine Learning (Random Forest), and Retrieval-Augmented Generation (RAG) to automate resume screening, rank candidates objectively, and assist recruiters during live interviews.
+**HireGen AI** is an advanced, AI-powered Applicant Tracking System (ATS) and interview assistant designed for modern recruiting teams. It leverages Generative AI (Gen AI), Large Language Models (LLMs), Machine Learning (Random Forest), and Retrieval-Augmented Generation (RAG) to automate resume screening, rank candidates objectively, and assist recruiters during live interviews.
 
 ## ✨ Core Features
 
@@ -27,11 +27,11 @@
 
 ## 🛠️ Tech Stack
 
-* **Frontend / UI:** Streamlit (Custom SaaS-styled CSS)
-* **Backend:** Python
+* **Frontend / UI:** React 19, Vite, Tailwind CSS, Recharts
+* **Backend:** FastAPI (Python)
 * **Machine Learning:** Scikit-Learn (Random Forest), SHAP (Explainability)
-* **LLM Integration:** Groq API (Llama 3)
-* **Vector Database:** ChromaDB / FAISS (for RAG)
+* **Gen AI & LLM Integration:** Advanced Large Language Models utilizing Retrieval-Augmented Generation (RAG)
+* **Vector Database:** ChromaDB / FAISS (for RAG context)
 * **Database:** PostgreSQL (Production) / SQLite (Local)
 * **Deployment:** Docker & Docker Compose
 
@@ -41,7 +41,8 @@
 
 ### 1. Prerequisites
 * Python 3.10+
-* [Groq API Key](https://console.groq.com/)
+* Node.js & npm (for the frontend)
+* Required API Keys (configured via `.env`)
 * Docker (Optional, for containerized deployment)
 
 ### 2. Installation
@@ -64,23 +65,37 @@ Copy the template `.env` file to configure your credentials:
 cp .env.example .env
 ```
 Open `.env` and configure your API keys. **At minimum, you must provide:**
-* `GROQ_API_KEY`: Your Groq API key for LLM generation.
+* `GROQ_API_KEY`: Your provider API key for Gen AI / LLM text generation.
 * `DATABASE_URL`: (Optional) Defaults to local SQLite if left blank.
 
-> **Note:** The application includes strict startup validation and will intentionally crash if the `GROQ_API_KEY` is missing from the `.env` file.
+> **Note:** The application includes strict startup validation and will intentionally crash if the required API keys are missing from the `.env` file.
 
 ### 4. Running the Application
 
-**Option A: Run Locally via Streamlit**
-```bash
-streamlit run app.py
-```
-
-**Option B: Run via Docker Compose**
+**Option A: Run via Docker Compose (Recommended)**
 ```bash
 docker-compose up --build
 ```
-The application will be available at `http://localhost:8000` (or `http://localhost:8501` depending on your Streamlit configuration).
+* **Frontend:** Available at `http://localhost:3000`
+* **Backend API Docs:** Available at `http://localhost:8000/api/v1/openapi.json`
+
+**Option B: Run Locally (Manual)**
+
+*Terminal 1 - Backend:*
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+*Terminal 2 - Frontend:*
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ---
 
