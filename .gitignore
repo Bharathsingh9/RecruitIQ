@@ -1,0 +1,46 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+!.env.example
+
+# Database
+*.db
+*.sqlite3
+hiregen.db
+
+# Vector Store
+vector_store_data/
+
+# Data and sensitive files
+data/
+reports/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+.pytest_cache/
+coverage/
+
+# Node/Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+dist/
+build/
+.npm/
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
