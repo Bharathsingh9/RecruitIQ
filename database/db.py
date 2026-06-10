@@ -22,12 +22,26 @@ def get_db_connection() -> Any:
             import psycopg2
             if not config.DATABASE_URL:
                 raise ValueError("DATABASE_URL is not set but dialect is configured as postgresql.")
-            return psycopg2.connect(config.DATABASE_URL)
+            conn = psycopg2.connect(config.DATABASE_URL)
+            logger.info("Using PostgreSQL database.")
+            logger.info("PostgreSQL connection established.")
+            return conn
         else:
             import sqlite3
-            return sqlite3.connect(config.SQLITE_DB_FILE)
+            conn = sqlite3.connect(config.SQLITE_DB_FILE)
+            logger.info("Using SQLite database for local development.")
+            logger.info("SQLite connection established.")
+            return conn
     except Exception as e:
         logger.error(f"Failed to connect to database ({config.DB_DIALECT}): {e}", exc_info=True)
+        if config.DB_DIALECT == "postgresql":
+            logger.warning(f"PostgreSQL connection failed. Falling back to SQLite. Error: {e}")
+            import sqlite3
+            config.DB_DIALECT = "sqlite"
+            conn = sqlite3.connect(config.SQLITE_DB_FILE)
+            logger.info("Using SQLite database for local development.")
+            logger.info("SQLite connection established.")
+            return conn
         raise e
 
 
