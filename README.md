@@ -33,7 +33,6 @@
 * **Gen AI & LLM Integration:** Advanced Large Language Models utilizing Retrieval-Augmented Generation (RAG)
 * **Vector Database:** ChromaDB / FAISS (for RAG context)
 * **Database:** PostgreSQL (Production) / SQLite (Local)
-* **Deployment:** Docker & Docker Compose
 
 ---
 
@@ -43,7 +42,6 @@
 * Python 3.10+
 * Node.js & npm (for the frontend)
 * Required API Keys (configured via `.env`)
-* Docker (Optional, for containerized deployment)
 
 ### 2. Installation
 Clone the repository and install dependencies:
@@ -71,15 +69,6 @@ Open `.env` and configure your API keys. **At minimum, you must provide:**
 > **Note:** The application includes strict startup validation and will intentionally crash if the required API keys are missing from the `.env` file.
 
 ### 4. Running the Application
-
-**Option A: Run via Docker Compose (Recommended)**
-```bash
-docker-compose up --build
-```
-* **Frontend:** Available at `http://localhost:3000`
-* **Backend API Docs:** Available at `http://localhost:8000/api/v1/openapi.json`
-
-**Option B: Run Locally (Manual)**
 
 *Terminal 1 - Backend:*
 ```bash
