@@ -7,6 +7,9 @@ Renamed to app_config to prevent namespace conflicts.
 import os
 import logging
 from typing import Optional
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -18,9 +21,36 @@ if not GROQ_API_KEY:
     raise ValueError("Missing GROQ_API_KEY environment variable.")
 
 # Database configuration
-# If DATABASE_URL is set (e.g. Postgres on Render/Railway/Neon), use Postgres. Otherwise, default to SQLite.
 DATABASE_URL: Optional[str] = os.environ.get("DATABASE_URL")
-DB_DIALECT: str = "postgresql" if DATABASE_URL else "sqlite"
+
+logger.info(f"DATABASE_URL = {DATABASE_URL}")
+
+# Validation logic for DATABASE_URL
+invalid_placeholders = [
+    "",
+    "your_database_url_here",
+    "placeholder",
+    "example",
+    "test",
+    "dummy"
+]
+
+if DATABASE_URL is None or DATABASE_URL.strip().lower() in invalid_placeholders:
+    logger.warning("Invalid DATABASE_URL detected.")
+    logger.warning("Switching to SQLite.")
+    DATABASE_URL = None
+elif not (DATABASE_URL.startswith("postgresql://") or DATABASE_URL.startswith("postgres://")):
+    logger.warning("Invalid DATABASE_URL detected (not a valid postgres URL).")
+    logger.warning("Switching to SQLite.")
+    DATABASE_URL = None
+
+if DATABASE_URL is None:
+    DB_DIALECT = "sqlite"
+else:
+    DB_DIALECT = "postgresql"
+
+logger.info(f"Selected database type: {DB_DIALECT}")
+
 SQLITE_DB_FILE: str = os.environ.get("SQLITE_DB_FILE", "hiregen.db")
 
 # Vector Database paths
@@ -39,10 +69,8 @@ def get_db_connection_params() -> dict:
     Returns database connection details depending on configured dialect.
     """
     if DB_DIALECT == "postgresql":
-        logger.info("Database dialect set to PostgreSQL.")
         return {"url": DATABASE_URL}
     else:
-        logger.info(f"Database dialect set to SQLite. Database file: {SQLITE_DB_FILE}")
         return {"file": SQLITE_DB_FILE}
 
 logger.info(f"Configuration loaded. Dialect: {DB_DIALECT}, Model: {LLM_MODEL}")

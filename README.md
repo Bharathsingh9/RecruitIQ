@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>RecruitIQ  AI</h1>
+  <h1>RecruitIQ AI</h1>
   <p><b>Enterprise Resume Screening & AI Interview Copilot</b></p>
 
   <p>
@@ -13,13 +13,13 @@
 ---
 
 ## 📖 Overview
-**RecruitIQ** is an advanced, AI-powered Applicant Tracking System (ATS) and interview assistant designed for modern recruiting teams. It leverages Generative AI (Gen AI), Large Language Models (LLMs), Machine Learning (Random Forest), and Retrieval-Augmented Generation (RAG) to automate resume screening, rank candidates objectively, and assist recruiters during live interviews.
+**RecruitIQ AI** is an advanced, AI-powered Applicant Tracking System (ATS) and interview assistant designed for modern recruiting teams. It leverages Generative AI (Gen AI), Large Language Models (LLMs), Machine Learning (Random Forest), and Retrieval-Augmented Generation (RAG) to automate resume screening, rank candidates objectively, and assist recruiters during live interviews.
 
 ## ✨ Core Features
 
-* 🔍 **Smart Candidate Screening**: Single-resume parsing that automatically calculates match scores against a Job Description. Includes **Explainable AI (SHAP)** to show exactly *why* a candidate was recommended.
+* 🔍 **Smart Candidate Screening**: Single-resume parsing that automatically calculates match scores against a Job Description.
 * 📂 **Multi-Resume Batch Processing**: Upload an entire folder of resumes to generate a ranked leaderboard of candidates in seconds.
-* 🎙️ **AI Interview Copilot**: A real-time assistant that evaluates candidate responses for technical depth, communication, and completeness. Includes a built-in **RAG Knowledge Base** to retrieve technical interview questions on the fly.
+* 🎙️ **AI Interview Copilot**: A real-time assistant that evaluates candidate responses for technical depth, communication, and completeness.
 * 📊 **Recruiter Analytics**: Comprehensive dashboards featuring Plotly-powered hiring funnels, skill gap heatmaps, and distribution charts.
 * 📥 **Exportable Dossiers**: Generate comprehensive PDF dossiers or Excel/CSV campaign reports with a single click.
 
@@ -29,7 +29,7 @@
 
 * **Frontend / UI:** React 19, Vite, Tailwind CSS, Recharts
 * **Backend:** FastAPI (Python)
-* **Machine Learning:** Scikit-Learn (Random Forest), SHAP (Explainability)
+* **Machine Learning:** Scikit-Learn (Random Forest)
 * **Gen AI & LLM Integration:** Advanced Large Language Models utilizing Retrieval-Augmented Generation (RAG)
 * **Vector Database:** ChromaDB / FAISS (for RAG context)
 * **Database:** PostgreSQL (Production) / SQLite (Local)

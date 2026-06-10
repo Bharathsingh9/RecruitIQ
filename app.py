@@ -79,15 +79,11 @@ st.markdown("""
 <style>
     /* Global Base Reset */
     .stApp {
-        background-color: #FFFFFF !important;
-        color: #111827 !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
     
     /* Clean Sidebar Styling */
     section[data-testid="stSidebar"] {
-        background-color: #F8FAFC !important;
-        border-right: 1px solid #E2E8F0 !important;
         padding-top: 20px;
     }
     section[data-testid="stSidebar"] .stRadio > label {
@@ -96,29 +92,30 @@ st.markdown("""
     
     /* Card Layouts */
     .saas-card {
-        background-color: #F8FAFC;
-        border: 1px solid #E2E8F0;
+        background-color: var(--secondary-background-color);
+        border: 1px solid rgba(128, 128, 128, 0.2);
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 15px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        color: var(--text-color);
     }
     
     .saas-header {
         font-size: 1.1em;
         font-weight: 600;
-        color: #111827;
+        color: var(--text-color);
         margin-bottom: 12px;
-        border-bottom: 1px solid #E2E8F0;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
         padding-bottom: 6px;
     }
     
     /* Rounded tag badges */
     .tag-matched {
         display: inline-block;
-        background-color: #EFF6FF;
-        color: #2563EB;
-        border: 1px solid #BFDBFE;
+        background-color: rgba(37, 99, 235, 0.1);
+        color: #3B82F6;
+        border: 1px solid rgba(37, 99, 235, 0.2);
         padding: 4px 10px;
         border-radius: 9999px;
         font-size: 0.82em;
@@ -128,9 +125,9 @@ st.markdown("""
     
     .tag-missing {
         display: inline-block;
-        background-color: #FEF2F2;
+        background-color: rgba(239, 68, 68, 0.1);
         color: #EF4444;
-        border: 1px solid #FCA5A5;
+        border: 1px solid rgba(239, 68, 68, 0.2);
         padding: 4px 10px;
         border-radius: 9999px;
         font-size: 0.82em;
@@ -142,14 +139,15 @@ st.markdown("""
     div[data-testid="stMetricValue"] {
         font-size: 1.8em !important;
         font-weight: 700 !important;
-        color: #2563EB !important;
+        color: #3B82F6 !important;
     }
     
     div[data-testid="stMetricLabel"] {
         font-size: 0.85em !important;
         text-transform: uppercase !important;
         letter-spacing: 0.05em !important;
-        color: #4A5568 !important;
+        color: var(--text-color) !important;
+        opacity: 0.8;
     }
     
     div[data-testid="stMetricDelta"] {
@@ -184,12 +182,13 @@ st.markdown("""
     
     /* Question card styles */
     .question-card {
-        background-color: #FFFFFF;
-        border-left: 4px solid #2563EB;
+        background-color: var(--secondary-background-color);
+        border-left: 4px solid #3B82F6;
         padding: 12px 16px;
         border-radius: 0 6px 6px 0;
         margin-bottom: 10px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        color: var(--text-color);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -325,11 +324,11 @@ with st.sidebar:
     page = st.radio(
         "Navigation",
         [
+            "📊 Dashboard",
             "🔍 Candidate Screening", 
-            "📂 Multi-Resume Screening",
-            "🎙️ AI Interview Copilot",
-            "📊 Recruiter Analytics",
-            "⚙️ Settings"
+            "📂 Batch Screening",
+            "🎙️ Interview Copilot",
+            "📈 Analytics"
         ]
     )
 
@@ -365,20 +364,6 @@ if page == "🔍 Candidate Screening":
             placeholder="Paste the target job description requirements here..."
         )
 
-    # Advanced Settings Expander (hiding controls by default)
-    with st.expander("🛠️ Advanced Settings (Baseline Parameters)", expanded=False):
-        col_adv_l, col_adv_r = st.columns(2)
-        with col_adv_l:
-            experience_years = st.slider("Years of Experience Baseline", 0.0, 20.0, 4.0, step=0.5)
-            certifications = st.number_input("Certifications count Baseline", min_value=0, max_value=15, value=3)
-        with col_adv_r:
-            education_score = st.slider("Education Score Baseline", 0.0, 100.0, 85.0, step=5.0)
-            projects_text = st.text_area(
-                "Candidate Projects Baseline (one per line)",
-                height=80,
-                value="Fraud Detection System\nResume Screening AI\nDeep Learning Classifier\nKubernetes Microservice\nCloud Query Engine"
-            )
-            
     # Trigger button
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("🚀 Analyze Candidate Profile", type="primary", use_container_width=True):
@@ -387,16 +372,14 @@ if page == "🔍 Candidate Screening":
         elif jd_text.strip() == "":
             st.warning("⚠️ Please provide a job description.")
         else:
-            projects_list = [p.strip() for p in projects_text.split('\n') if p.strip()]
-            
             with st.spinner("Analyzing candidate profile against requirements..."):
                 results = handle_screening_pipeline(
                     uploaded_file=uploaded_file,
                     jd_text=jd_text,
-                    experience_years=experience_years,
-                    education_score=education_score,
-                    certifications=certifications,
-                    projects=projects_list,
+                    experience_years=4.0,
+                    education_score=85.0,
+                    certifications=2,
+                    projects=["General Project"],
                     api_key=config.GROQ_API_KEY
                 )
                 
@@ -410,12 +393,10 @@ if page == "🔍 Candidate Screening":
         
         st.markdown("### 📊 Screening Evaluation Results")
         
-        # 1. Row of 4 metric cards
-        m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+        # 1. Row of metric cards
+        m_col1, m_col2 = st.columns(2)
         m_col1.metric("Match Score", f"{res['match_score']}%")
-        m_col2.metric("Prediction", res["prediction"])
-        m_col3.metric("Resume Grade", res["scorer"]["grade"])
-        m_col4.metric("Confidence", f"{int(res['confidence'] * 100)}%")
+        m_col2.metric("Resume Grade", res["scorer"]["grade"])
         
         st.markdown("<br>", unsafe_allow_html=True)
         
@@ -430,8 +411,6 @@ if page == "🔍 Candidate Screening":
                 <p><b>Name:</b> {res['name'] if res['name'] != "Not Found" else "Not Extracted"}</p>
                 <p><b>Email:</b> {res['email'] if res['email'] != "Not Found" else "Not Extracted"}</p>
                 <p><b>Phone:</b> {res['phone'] if res['phone'] != "Not Found" else "Not Extracted"}</p>
-                <p><b>Experience Baseline:</b> {experience_years} Years</p>
-                <p><b>Education Baseline Score:</b> {education_score}%</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -458,19 +437,6 @@ if page == "🔍 Candidate Screening":
 
         st.markdown("---")
         
-        # Explainable AI section
-        st.markdown("### Why This Candidate Was Recommended")
-        xai_col1, xai_col2 = st.columns([2, 3])
-        
-        with xai_col1:
-            st.markdown("##### Top SHAP Decision Factors")
-            for factor in res["xai"]["top_factors"]:
-                st.markdown(factor)
-                
-        with xai_col2:
-            fig_shap = plot_shap_explanation(res["xai"]["shap_values"])
-            st.plotly_chart(fig_shap, use_container_width=True)
-
         st.markdown("---")
         
         # Interview Questions Section
@@ -499,37 +465,24 @@ if page == "🔍 Candidate Screening":
 # =====================================================================
 # PAGE 2: Multi-Resume Screening
 # =====================================================================
-elif page == "📂 Multi-Resume Screening":
-    st.title("Multi-Resume Screening")
+elif page == "📂 Batch Screening":
+    st.title("Batch Screening")
     st.subheader("Process multiple resume profiles and inspect rankings leaderboard.")
     st.markdown("---")
 
-    col_b_l, col_b_r = st.columns([1, 1])
+    batch_jd = st.text_area(
+        "Campaign Job Description",
+        height=120,
+        value="We are looking for a Software Engineer with Python, Java, SQL, AWS, Docker, Kubernetes, and machine learning.",
+        placeholder="Paste JD requirements..."
+    )
     
-    with col_b_l:
-        batch_jd = st.text_area(
-            "Campaign Job Description",
-            height=120,
-            value="We are looking for a Software Engineer with Python, Java, SQL, AWS, Docker, Kubernetes, and machine learning.",
-            placeholder="Paste JD requirements..."
-        )
-        
-        batch_files = st.file_uploader(
-            "Upload Multiple Resumes",
-            type=["pdf"],
-            accept_multiple_files=True,
-            help="Upload all resume PDF profiles to evaluate simultaneously."
-        )
-        
-    with col_b_r:
-        st.markdown("##### Campaign Setup Defaults")
-        col_bs1, col_bs2 = st.columns(2)
-        with col_bs1:
-            b_exp = st.slider("Experience Years Baseline", 0.0, 20.0, 4.0, step=0.5, key="b_exp")
-            b_certs = st.number_input("Certifications count Baseline", min_value=0, max_value=15, value=2, key="b_certs")
-        with col_bs2:
-            b_edu = st.slider("Education Score Baseline", 0.0, 100.0, 80.0, step=5.0, key="b_edu")
-            b_projs = st.number_input("Projects Baseline Count", min_value=0, max_value=15, value=3, key="b_projs")
+    batch_files = st.file_uploader(
+        "Upload Multiple Resumes",
+        type=["pdf"],
+        accept_multiple_files=True,
+        help="Upload all resume PDF profiles to evaluate simultaneously."
+    )
 
     if st.button("🚀 Process Batch Profiles", type="primary", use_container_width=True):
         if not batch_files:
@@ -557,10 +510,10 @@ elif page == "📂 Multi-Resume Screening":
                 results = process_multiple_resumes(
                     pdf_paths=temp_paths,
                     jd_text=batch_jd,
-                    experience_years_list=[b_exp] * len(temp_paths),
-                    education_score_list=[b_edu] * len(temp_paths),
-                    certifications_list=[b_certs] * len(temp_paths),
-                    projects_count_list=[b_projs] * len(temp_paths),
+                    experience_years_list=[4.0] * len(temp_paths),
+                    education_score_list=[85.0] * len(temp_paths),
+                    certifications_list=[2] * len(temp_paths),
+                    projects_count_list=[3] * len(temp_paths),
                     progress_callback=batch_progress
                 )
                 
@@ -594,9 +547,7 @@ elif page == "📂 Multi-Resume Screening":
             table_rows.append({
                 "Rank": idx,
                 "Candidate Name": c["name"],
-                "Score": f"{c['rank_score']:.1f}%",
-                "Prediction": c["prediction"],
-                "Confidence": f"{int(c['confidence'] * 100)}%"
+                "Score": f"{c['rank_score']:.1f}%"
             })
             
         df_top = pd.DataFrame(table_rows)
@@ -652,145 +603,95 @@ elif page == "📂 Multi-Resume Screening":
 # =====================================================================
 # PAGE 3: AI Interview Copilot
 # =====================================================================
-elif page == "🎙️ AI Interview Copilot":
-    st.title("AI Interview Copilot")
-    st.subheader("Evaluate candidate answers using LLM scoring metrics and retrieve guide materials.")
+elif page == "🎙️ Interview Copilot":
+    st.title("Interview Copilot")
+    st.subheader("Evaluate candidate answers using LLM scoring metrics.")
     st.markdown("---")
-
-    # Group evaluation tools and RAG assistant using Streamlit Tabs
-    tab_eval, tab_rag = st.tabs(["🎙️ Answer Evaluator", "📖 RAG Prep Guide Assistant"])
     
-    with tab_eval:
-        st.markdown("### Interview Answer Evaluator")
+    st.markdown("### Interview Answer Evaluator")
         
-        predefined_questions = [
-            "Explain the difference between Random Forest and XGBoost.",
-            "What is overfitting and how do you prevent it?",
-            "Explain the architecture of a custom K-Means clustering algorithm.",
-            "How does TF-IDF differ from word embeddings?",
-            "Explain standard gradient descent vs Stochastic Gradient Descent (SGD)."
-        ]
+    predefined_questions = [
+        "Explain the difference between Random Forest and XGBoost.",
+        "What is overfitting and how do you prevent it?",
+        "Explain the architecture of a custom K-Means clustering algorithm.",
+        "How does TF-IDF differ from word embeddings?",
+        "Explain standard gradient descent vs Stochastic Gradient Descent (SGD)."
+    ]
+    
+    sel_q = st.selectbox(
+        "Technical Question:",
+        ["-- Enter Custom Question --"] + predefined_questions
+    )
+    
+    if sel_q == "-- Enter Custom Question --":
+        question_text = st.text_input("Enter custom question text:")
+    else:
+        question_text = sel_q
         
-        sel_q = st.selectbox(
-            "Technical Question:",
-            ["-- Enter Custom Question --"] + predefined_questions
-        )
-        
-        if sel_q == "-- Enter Custom Question --":
-            question_text = st.text_input("Enter custom question text:")
+    candidate_answer = st.text_area(
+        "Candidate Response:",
+        height=140,
+        placeholder="Type or paste candidate response here..."
+    )
+    
+    if st.button("🚀 Evaluate Response", type="primary", use_container_width=True):
+        if question_text.strip() == "" or candidate_answer.strip() == "":
+            st.warning("⚠️ Both question and answer are required.")
         else:
-            question_text = sel_q
-            
-        candidate_answer = st.text_area(
-            "Candidate Response:",
-            height=140,
-            placeholder="Type or paste candidate response here..."
-        )
-        
-        if st.button("🚀 Evaluate Response", type="primary", use_container_width=True):
-            if question_text.strip() == "" or candidate_answer.strip() == "":
-                st.warning("⚠️ Both question and answer are required.")
-            else:
-                with st.spinner("Assessing answer depth, accuracy, and completeness..."):
-                    eval_res = evaluate_answer(
-                        question=question_text,
-                        answer=candidate_answer,
-                        api_key=config.GROQ_API_KEY
-                    )
-                    
-                st.success("🎉 Answer successfully evaluated!")
-                
-                # Output details as modern card grids
-                score = eval_res["score"]
-                depth = eval_res["technical_depth"]
-                comm = eval_res["communication"]
-                comp = eval_res["completeness"]
-                
-                st.markdown("#### Evaluation Summary")
-                m_c1, m_c2, m_c3, m_c4 = st.columns(4)
-                m_c1.metric("Overall Score", f"{score}/10")
-                m_c2.metric("Technical Depth", f"{depth}/10")
-                m_c3.metric("Communication", f"{comm}/10")
-                m_c4.metric("Completeness", f"{comp}/10")
-                
-                col_ev_l, col_ev_r = st.columns(2)
-                with col_ev_l:
-                    st.markdown(f"""
-                    <div class="saas-card" style="border-left: 4px solid #10B981;">
-                        <div class="saas-header" style="color: #10B981;">🌟 Candidate Strengths</div>
-                        {"".join([f"<p>• <b>{s}</b></p>" for s in eval_res['strengths']]) if eval_res['strengths'] else "<p>None</p>"}
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                with col_ev_r:
-                    st.markdown(f"""
-                    <div class="saas-card" style="border-left: 4px solid #EF4444;">
-                        <div class="saas-header" style="color: #EF4444;">📈 Areas for Improvement</div>
-                        {"".join([f"<p>• <b>{imp}</b></p>" for imp in eval_res['improvements']]) if eval_res['improvements'] else "<p>None</p>"}
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-    with tab_rag:
-        st.markdown("### Interview Preparation Context Search")
-        
-        col_rag1, col_rag2 = st.columns([3, 1])
-        with col_rag1:
-            st.markdown("💡 *Ask prep questions (e.g. 'What questions does Google ask for ML Engineer roles?').*")
-        with col_rag2:
-            if st.button("🔄 Rebuild Vector Store"):
-                with st.spinner("Rebuilding indexes..."):
-                    try:
-                        from rag.ingest import ingest_pipeline
-                        ingest_pipeline(rag_db_type.lower())
-                        st.success("Vector index successfully rebuilt!")
-                    except Exception as err:
-                        st.error(f"Rebuild failed: {err}")
-                        
-        rag_query = st.text_input(
-            "Query prep knowledge base:",
-            placeholder="Type your interview prep questions..."
-        )
-        
-        if rag_query.strip() != "":
-            with st.spinner("Searching and generating response..."):
-                rag_res = answer_query(
-                    query=rag_query,
-                    db_type=rag_db_type.lower(),
+            with st.spinner("Assessing answer depth, accuracy, and completeness..."):
+                eval_res = evaluate_answer(
+                    question=question_text,
+                    answer=candidate_answer,
                     api_key=config.GROQ_API_KEY
                 )
                 
-            st.markdown("#### AI Response")
-            st.write(rag_res["answer"])
+            st.success("🎉 Answer successfully evaluated!")
             
-            st.markdown("---")
-            st.markdown("#### Retrieved Context segments:")
+            # Output details as modern card grids
+            score = eval_res["score"]
+            depth = eval_res["technical_depth"]
+            comm = eval_res["communication"]
+            comp = eval_res["completeness"]
             
-            from rag.retriever import retrieve_documents
-            docs = retrieve_documents(rag_query, k=2, db_type=rag_db_type.lower())
+            st.markdown("#### Evaluation Summary")
+            m_c1, m_c2, m_c3, m_c4 = st.columns(4)
+            m_c1.metric("Overall Score", f"{score}/10")
+            m_c2.metric("Technical Depth", f"{depth}/10")
+            m_c3.metric("Communication", f"{comm}/10")
+            m_c4.metric("Completeness", f"{comp}/10")
             
-            for i, d in enumerate(docs, 1):
-                src = d["metadata"].get("source", "Unknown Source")
+            col_ev_l, col_ev_r = st.columns(2)
+            with col_ev_l:
                 st.markdown(f"""
-                <div class="saas-card">
-                    <b>[{i}] Source:</b> {src} | <b>Similarity distance (L2):</b> {d['score']:.4f}
-                    <br><br>
-                    <i>"{d['text']}"</i>
+                <div class="saas-card" style="border-left: 4px solid #10B981;">
+                    <div class="saas-header" style="color: #10B981;">🌟 Candidate Strengths</div>
+                    {"".join([f"<p>• <b>{s}</b></p>" for s in eval_res['strengths']]) if eval_res['strengths'] else "<p>None</p>"}
                 </div>
                 """, unsafe_allow_html=True)
+                
+            with col_ev_r:
+                st.markdown(f"""
+                <div class="saas-card" style="border-left: 4px solid #EF4444;">
+                    <div class="saas-header" style="color: #EF4444;">📈 Areas for Improvement</div>
+                    {"".join([f"<p>• <b>{imp}</b></p>" for imp in eval_res['improvements']]) if eval_res['improvements'] else "<p>None</p>"}
+                </div>
+                """, unsafe_allow_html=True)
+                    
+
 
 
 # =====================================================================
 # PAGE 4: Recruiter Analytics
 # =====================================================================
-elif page == "📊 Recruiter Analytics":
-    st.title("Recruiter Analytics")
-    st.subheader("Hiring campaign metrics, matching trends, and file exports.")
+elif page == "📊 Dashboard":
+    st.title("Dashboard")
+    st.subheader("High-level overview of hiring campaign metrics.")
     st.markdown("---")
 
     df_cand = get_candidates_df()
     
     if df_cand.empty:
-        st.info("No candidates evaluated yet. Complete candidate screenings to populate charts.")
+        st.info("No candidates evaluated yet. Complete candidate screenings to populate the dashboard.")
     else:
         # KPI Metric Row
         tot = get_total_candidates()
@@ -803,7 +704,20 @@ elif page == "📊 Recruiter Analytics":
         m_c2.metric("Shortlisted", sh, delta=f"{int((sh/tot)*100)}%" if tot > 0 else None)
         m_c3.metric("Needs Review", nr)
         m_c4.metric("Rejected", rj)
-        
+
+# =====================================================================
+# PAGE 5: Analytics
+# =====================================================================
+elif page == "📈 Analytics":
+    st.title("Analytics")
+    st.subheader("Deep dive into hiring campaign trends and skill distributions.")
+    st.markdown("---")
+    
+    df_cand = get_candidates_df()
+    
+    if df_cand.empty:
+        st.info("No candidates evaluated yet. Complete candidate screenings to populate charts.")
+    else:
         st.markdown("<br>", unsafe_allow_html=True)
         
         # Plotly charts
@@ -869,66 +783,4 @@ elif page == "📊 Recruiter Analytics":
                         use_container_width=True
                     )
                     
-        # Admin Wipe exp
-        with st.expander("⚠️ Campaign Administrative Settings", expanded=False):
-            if st.button("Clear Candidates Campaign Data", type="secondary"):
-                try:
-                    from database.db import get_db_connection
-                    conn = get_db_connection()
-                    cursor = conn.cursor()
-                    cursor.execute("DROP TABLE IF EXISTS candidates")
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
-                    create_database()
-                    st.success("✅ Database candidates campaign wiped and re-initialized successfully!")
-                except Exception as wipe_err:
-                    st.error(f"Wipe failed: {wipe_err}")
 
-
-# =====================================================================
-# PAGE 5: Settings
-# =====================================================================
-elif page == "⚙️ Settings":
-    st.title("Settings")
-    st.subheader("Configure Groq API endpoints, LLM model defaults, and vector databases.")
-    st.markdown("---")
-
-    # Labeled form-like parameters inputs
-    api_key_input = st.text_input(
-        "Groq API Key",
-        value=config.GROQ_API_KEY,
-        type="password",
-        placeholder="gsk_...",
-        help="Input your Groq API key to process LLM and evaluators completions."
-    )
-    
-    # Save key
-    if api_key_input:
-        os.environ["GROQ_API_KEY"] = api_key_input
-        config.GROQ_API_KEY = api_key_input
-        
-    model_sel = st.selectbox(
-        "Model Selection",
-        ["llama-3.1-8b-instant", "llama3-8b-8192", "mixtral-8x7b-32768"],
-        index=0,
-        help="Target Groq Cloud LLM model for prompts completion."
-    )
-    config.LLM_MODEL = model_sel
-    
-    v_db_sel = st.selectbox(
-        "Vector Database Selection",
-        ["FAISS", "ChromaDB"],
-        index=0 if rag_db_type == "FAISS" else 1,
-        help="Target database type for Retrieval-Augmented Generation."
-    )
-    
-    # Theme configuration selection
-    theme_sel = st.selectbox(
-        "Theme Selection",
-        ["Corporate Light (Recommended)", "Corporate Dark", "System Default"],
-        index=0,
-        help="UI color styling theme configurations."
-    )
-    
-    st.success("✅ Configurations saved successfully!")
